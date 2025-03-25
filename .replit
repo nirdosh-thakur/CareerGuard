@@ -1,0 +1,4 @@
+[nix]
+channel = "stable-24_05"
+language = "python"
+run = "python app.py"
