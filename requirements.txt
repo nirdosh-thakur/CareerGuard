@@ -1,0 +1,8 @@
+#Its a satndard in python enviorment at any time you have python project and you want to specify it require certain library it is convention to put those inside requirements
+
+
+
+Flask
+
+#When ever you want to put pyhton project in production always use gunicorn
+gunicorn
