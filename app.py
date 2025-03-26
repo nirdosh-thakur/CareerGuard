@@ -1,6 +1,6 @@
 from flask import Flask, render_template, jsonify
-
 app = Flask(__name__)
+
 
 JOBS = [
     {
@@ -19,7 +19,7 @@ JOBS = [
         'id' : 3,
         'title' : 'Backend Engineer',
         'location' :'Banglore, India',
-        'salary' : 'Rs. 1,30,000'
+        'salary' : 'Rs. 1,50,000'
     },
     {
         'id' : 4,
