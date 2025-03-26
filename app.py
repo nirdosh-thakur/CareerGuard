@@ -39,7 +39,8 @@ def hello_jovian():
 
 
 
-<!-- Comments -->
+# Commented out code
+# In /api/jobs  api is used to differentiate between html pasge and page carrying structured inforamtion.
 @app.route("/api/jobs")
 def list_jobs():
     return jsonify(JOBS)
@@ -50,3 +51,9 @@ def list_jobs():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True, port=8080)
+
+
+
+
+
+#Cloud Web Serivces - AWS, Azure, GCP, Render.com(good for Python)
