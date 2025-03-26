@@ -1,0 +1,21 @@
+<div class="row border-bottom" style = "margin-top:15px; margin-bottom:1px; padding-bottom:10px">
+
+  <div class="col-10">
+    <h4 style="color:rgb(120,120,120); margin-bottom:3px;"> 
+    {{idx['title']}}
+    </h4>
+
+    <div><b>Location :</b> {{idx['location']}}</div>
+
+
+    {% if 'salary' in idx%}
+  <div><b>Salary :</b> {{idx['salary']}}</div>
+    {% endif %}
+  </div>
+
+  
+  <div class="col-2">
+    <button type="button" class="btn btn-outline-info">Apply</button>
+  </div>
+
+</div>

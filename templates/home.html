@@ -20,7 +20,7 @@
   
   <body>
     <div class="container">
-      <h1 class="text-center mt-2 mb-2">Jovian Careers</h1>
+      <h1 class="text-center mt-2 mb-2">{{company_name}}</h1>
       <p class="text-center">Where Dreams Meet Reality</p>
       <img id = "banner" src = "https://ec3c773c-0619-4956-9964-698f73a6182c-00-1zns7vwmc7e3r.sisko.replit.dev/static/banner2.jpg" height = "320"></img>
 
@@ -33,14 +33,14 @@
       
       <h2 class="text-center mt-5 mb-2">Open Positions</h2>
       
-      <p>Job 1 - Show the jobs here</p>
-      <p>Job 2 - Show the jobs here</p>
-      <p>Job 3 - Show the jobs here</p>
-      <p>Job 4 - Show the jobs here</p>
-
+      <div>
+        {% for idx in jobs %}
+          {% include 'jobitem.html' %}
+        {% endfor %}
+      </div>
 
       
-      <div class="text-center">
+      <div class="text-center mt-5" >
         <button class="btn btn-primary btn-lg">Contact Us</button>
         <p class="mt-4"> Copyright, 2025 Nirdosh Thakur </p>
       </div>
