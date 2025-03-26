@@ -35,7 +35,9 @@ JOBS = [
 
 @app.route("/")
 def hello_jovian():
-    return render_template('home.html', jobs=JOBS, company_name='Jovian Careers')
+    return render_template('home.html', 
+                           jobs=JOBS, 
+                           company_name='Jovian Careers')
 
 
 
@@ -44,7 +46,6 @@ def hello_jovian():
 @app.route("/api/jobs")
 def list_jobs():
     return jsonify(JOBS)
-
 
 
 
