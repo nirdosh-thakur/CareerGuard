@@ -75,14 +75,19 @@
       <p class="text-center">Where Dreams Meet Reality</p>
       <img id = "banner" src = "https://ec3c773c-0619-4956-9964-698f73a6182c-00-1zns7vwmc7e3r.sisko.replit.dev/static/banner3.jpg" height = "320"></img>
 
-
+      <h2 class="text-center mt-5 mb-4">About Jovian</h2>
+      <div class="row" style="margin-bottom:16px">
+        <div class="col-md-6" style="align-content:center;">
       
-      <h2 class="mt-2 mb-2">About Jovian</h2>
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-
+        </div>
+        <div class="d-none d-md-block col-md-6">
+          <img src="/static/people.jpg" style="height:320px; border-radius:4px; float:right;">
+        </div>
+      </div>
       
       
-      <h2 class="text-center mt-5 mb-2">Job Openings</h2>
+      <h2 class="text-center mt-5 mb-2">Opening Positions</h2>
       
       <div>
         {% for idx in jobs %}
@@ -92,13 +97,12 @@
 
       
       <div class="text-center mt-5" >
-        <button class="btn btn-primary btn-lg">Contact Us</button>
-        <p class="mt-4"> Copyright, 2025 Nirdosh Thakur </p>
+        <a class="btn btn-primary btn-sm" href="mailto:helpdesk@xyz.ai?cc=xuv@xyz.com&subject=Question%20about%20job%20opening&body=Dear%20Sir%2FMam%2C%0D%0A%0D%0AMy%20name%20is%20%3Cyour%20name%3E%0D%0AMy%20question%20%3CEnter%20your%20question%3E%0D%0A%0D%0AThanks%20and%20Regards%2C%0D%0A%3CYour%20name%3E">Contact Us</a>
       </div>
 
       
     </div>
-    
+    {% include 'footer.html' %}
   </body>
 
   
