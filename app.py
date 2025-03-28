@@ -37,10 +37,10 @@ def show_job(id):
   return render_template('jobPage.html', 
                          job=JOB)
 
-@app.route("/jobs/<id>/apply")
-def print_job(id):
-    datae = request.args
-    return jsonify(datae)
+#@app.route("/jobs/<id>/apply")
+#def print_job(id):
+#    datae = request.form
+#    return jsonify(datae)
 
 
 
