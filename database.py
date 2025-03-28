@@ -12,10 +12,11 @@
 #Pooler Connection ::  postgresql://postgres.ioygetmsqnbejcrtsuer:Supabase%400868@aws-0-ap-south-1.pooler.supabase.com:5432/postgres
 
 #Use %40 to replace @
-import os
+#import os
 from sqlalchemy import create_engine, text
 
-DB_CONNECTION_STRING = os.environ['DB_CONNECTION_STRING']
+DB_CONNECTION_STRING='postgresql://postgres.ioygetmsqnbejcrtsuer:Supabase%400868@aws-0-ap-south-1.pooler.supabase.com:5432/postgres'
+#os.environ['DB_CONNECTION_STRING']
 
 engine = create_engine(DB_CONNECTION_STRING)
 
