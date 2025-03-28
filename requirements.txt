@@ -7,3 +7,4 @@ Flask
 gunicorn
 #When ever you want to put pyhton project in production always use gunicorn
 sqlalchemy
+psycopg2-binary
