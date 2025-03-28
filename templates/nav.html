@@ -1,13 +1,66 @@
+<!-- Actual CSS for navigation goes here -->
+<!-- Actual CSS for navigation goes here -->
+<!-- Actual CSS for navigation goes here -->
+<!-- Actual CSS for navigation goes here -->
+
+<style>
+  /* Custom Styling */
+  #onlyHeader .nav-item .nav-link {
+    position: relative;
+    font-weight: 500;
+    transition: color 0.3s ease-in-out;
+  }
+  /* Hover Effect: Light Orange Underline */
+  #onlyHeader .nav-item .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -3px;
+    width: 100%;
+    height: 2px;
+    background-color: #FFA500; /* Light Orange */
+    transform: scaleX(0);
+    transition: transform 0.3s ease-in-out;
+  }
+  #onlyHeader .nav-item .nav-link:hover::after {
+    transform: scaleX(1);
+  }
+  #onlyHeader .nav-item .nav-link:hover {
+    color: #FFA500; /* Light orange text on hover */
+  }
+  /* Adjusted Name Background */
+  #onlyHeader .name-box {
+    background-color: #333; /* Dark Gray Instead of Pure Black */
+    color: #f0f0f0;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+  }
+  /* Boxy Logo */
+  #onlyHeader .logo {
+    width: 70px;
+    height: 70px;
+    border-radius: 8px; /* Boxy but slightly rounded edges */
+    margin-right: 12px;
+  }
+</style>
+
+
+
+
+<!-- Actual HTML Code goes below here -->
+<!-- Actual HTML Code goes below here -->
+<!-- Actual HTML Code goes below here -->
+<!-- Actual HTML Code goes below here -->
+
 <div id="onlyHeader">
     <header class="navbar container shadow-sm fixed-top bg-white d-flex flex-wrap justify-content-between align-items-center py-3 mb-4 border-bottom">
       <a href="/" class="d-flex align-items-center mb-2 mb-md-0 me-md-auto text-decoration-none">
-        
         <!-- Boxy Logo -->
         <img src="/static/Logo1.jpg" alt="Logo" class="logo">
-
         <!-- Styled Name -->
         <span class="fs-4 name-box">Nirdosh Thakur</span>
-      
       </a>
 
       <!-- Personalized Navigation with Hover Effect -->

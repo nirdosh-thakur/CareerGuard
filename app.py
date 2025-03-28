@@ -15,18 +15,27 @@ def hello_jovian():
 
 
 
-# In /api/jobs  api is used to differentiate between html pasge and page carrying structured inforamtion.
+# Fetch all jobs in json api
 @app.route("/api/jobs")
 def list_jobs():
     jobs = load_all_jobs_from_db()
     return jsonify(jobs)
 
-
+#fetch single job in json api
 @app.route("/api/<id>")
 def single_job(id):
     job = load_single_job_from_db(id)
     return jsonify(job)
 
+
+
+@app.route("/jobs/<id>")
+def show_job(id):
+  JOB = load_single_job_from_db(id)
+  if not JOB:
+    return "Not Found", 404
+  return render_template('jobPage.html', 
+                         job=JOB)
 
 
 
