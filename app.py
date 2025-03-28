@@ -1,5 +1,5 @@
 from flask import Flask, render_template, jsonify
-from database import load_jobs_from_db
+from database import load_all_jobs_from_db, load_single_job_from_db
 
 
 app = Flask(__name__)
@@ -7,7 +7,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello_jovian():
-    JOBS = load_jobs_from_db()
+    JOBS = load_all_jobs_from_db()
     return render_template('home.html', 
                            jobs = JOBS, 
                            company_name='Jovian Careers')
@@ -18,13 +18,13 @@ def hello_jovian():
 # In /api/jobs  api is used to differentiate between html pasge and page carrying structured inforamtion.
 @app.route("/api/jobs")
 def list_jobs():
-    jobs = load_jobs_from_db()
+    jobs = load_all_jobs_from_db()
     return jsonify(jobs)
 
 
 @app.route("/api/<id>")
 def single_job(id):
-    job = load_jobs_from_db(id)
+    job = load_single_job_from_db(id)
     return jsonify(job)
 
 

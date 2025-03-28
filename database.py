@@ -21,7 +21,7 @@ DB_CONNECTION_STRING = os.environ['DB_CONNECTION_STRING']
 engine = create_engine(DB_CONNECTION_STRING)
 
 #Loading all Jobs
-def load_jobs_from_db():
+def load_all_jobs_from_db():
   with engine.connect() as conn:
       result = conn.execute(text("SELECT * FROM jobs"))
       jobs = []
@@ -31,7 +31,7 @@ def load_jobs_from_db():
 
 
 #Loading a single Job
-def load_job_from_db(id):
+def load_single_job_from_db(id):
     with engine.connect() as conn:
       result = conn.execute(text("SELECT * FROM jobs where id = :val"), {"val": id})
       row = result.all()
