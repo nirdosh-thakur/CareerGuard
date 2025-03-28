@@ -36,6 +36,11 @@ def load_single_job_from_db(id):
       result = conn.execute(text("SELECT * FROM jobs where id = :val"),{"val":id} )
       row = result.all()
       if(len(row) == 0):
-        return None
+        return {}
       else:
         return row[0]._asdict()
+
+
+def add_application_to_db(job_id, data):
+  with engine.connect() as conn:
+      conn.execute( text("INSERT INTO postgres.public.applications (job_id, full_name, email) VALUES (234, 'Nirdosh T','ntt@gmail.com')"))
