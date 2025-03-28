@@ -22,6 +22,12 @@ def list_jobs():
     return jsonify(jobs)
 
 
+@app.route("/api/<id>")
+def single_job(id):
+    jobs = load_jobs_from_db(id)
+    return jsonify(jobs)
+
+
 
 
 
