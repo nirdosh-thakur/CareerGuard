@@ -1,21 +1,7 @@
-#import sqlalchemy
-#import psycopg2
 
-#your_user = 'postgres.ioygetmsqnbejcrtsuer'
-#your_password ='Supabase%400868'
-#your_host = 'aws-0-ap-south-1.pooler.supabase.com'
-#your_port = 5432 
-#your_database = 'postgres'
-
-#DATABASE_URL = "postgresql://your_user:your_password@your_host:your_port/your_database"
-#Direct Connection ::  postgresql://postgres:Supabase%400868@db.ioygetmsqnbejcrtsuer.supabase.co:5432/postgres
-#Pooler Connection ::  postgresql://postgres.ioygetmsqnbejcrtsuer:Supabase%400868@aws-0-ap-south-1.pooler.supabase.com:5432/postgres
-
-#Use %40 to replace @
 import os
 from sqlalchemy import create_engine, text
 
-#DB_CONNECTION_STRING='postgresql://postgres.ioygetmsqnbejcrtsuer:Supabase%400868@aws-0-ap-south-1.pooler.supabase.com:5432/postgres'
 DB_CONNECTION_STRING = os.environ['DB_CONNECTION_STRING']
 
 engine = create_engine(DB_CONNECTION_STRING)
@@ -41,6 +27,18 @@ def load_single_job_from_db(id):
         return row[0]._asdict()
 
 
+
 def add_application_to_db(job_id, data):
+  query = text("INSERT INTO applications (job_id, full_name, email, linkedin_url, education, work_experience, resume_url) VALUES (:job_id, :full_name, :email, :linkedin_url, :education, :work_experience, :resume_url)")
   with engine.connect() as conn:
-      conn.execute( text("INSERT INTO postgres.public.applications (job_id, full_name, email) VALUES (234, 'Nirdosh T','ntt@gmail.com')"))
+      conn.execute(query, {
+          "job_id": job_id, 
+          "full_name": data['full_name'],
+          "email": data['email'],
+          "linkedin_url": data['linkedin_url'],
+          "education": data['education'],
+          "work_experience": data['work_experience'],
+          "resume_url": data['resume_url']
+      })
+      conn.commit()
+
