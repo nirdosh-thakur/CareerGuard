@@ -2,7 +2,24 @@
 <!-- Actual CSS for navigation goes here -->
 <!-- Actual CSS for navigation goes here -->
 <!-- Actual CSS for navigation goes here -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const dropdownBtn = document.getElementById("dropdownBtn");
+        const dropdownMenu = document.getElementById("dropdownMenu");
 
+        dropdownBtn.addEventListener("click", function (event) {
+            event.preventDefault();
+            dropdownMenu.classList.toggle("show");
+        });
+
+        // Close dropdown if clicked outside
+        document.addEventListener("click", function (event) {
+            if (!dropdownBtn.contains(event.target) && !dropdownMenu.contains(event.target)) {
+                dropdownMenu.classList.remove("show");
+            }
+        });
+    });
+</script>
 <style>
   /* Custom Styling */
   #onlyHeader .nav-item .nav-link {
@@ -44,6 +61,38 @@
     border-radius: 8px; /* Boxy but slightly rounded edges */
     margin-right: 12px;
   }
+  .dropdown {
+      position: relative;
+      display: inline-block;
+  }
+
+  /* Style for the dropdown menu */
+  .dropdown-menu {
+      display: none; /* Hidden by default */
+      position: absolute;
+      background-color: white;
+      min-width: 120px;
+      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+      border-radius: 5px;
+      padding: 8px 0;
+      list-style: none;
+  }
+
+  /* Style for dropdown items */
+  .dropdown-menu li {
+      padding: 8px 12px;
+      cursor: pointer;
+  }
+
+  .dropdown-menu li:hover {
+      background-color: #f2f2f2;
+  }
+
+  /* Show dropdown when active */
+  .show {
+      display: block;
+  }
+
 </style>
 
 
@@ -64,13 +113,53 @@
       </a>
 
       <!-- Personalized Navigation with Hover Effect -->
-      <ul class="nav nav-pills" style="justify-content:space-evenly;">
+      <ul class="nav nav-pills" style="align-items:center;justify-content:space-evenly;">
         <li class="nav-item"><a href="#" class="nav-link active">Dashboard</a></li>
         <li class="nav-item"><a href="#" class="nav-link">Projects</a></li>
         <li class="nav-item"><a href="#" class="nav-link">Skills</a></li>
         <li class="nav-item"><a href="#" class="nav-link">Blog</a></li>
-        <li class="nav-item"><a href="#" class="nav-link">Contact</a></li>
+        <!--  Adding drowpadown for Login logout -->
+        <li class="nav-item dropdown" style="align-items: center;justify-content: space-evenly;">
+          <a href="#" class="nav-link" id="dropdownBtn" style="display: flex;">             <div style="align-items:center;display:flex;">
+              <span style="
+                  background: #f5f5dc;
+                  color: #deb887;
+                  border-radius: 50%;
+                  padding: 10px;
+              ">
+                {% if session["logged_in"] %}
+                  {{ session["first_name"][0]}}{{ session["last_name"][0]}}
+                {% else %}
+                    <i class="fa fa-3x fa-user-circle"></i>
+                {% endif %}
+              </span> 
+            </div> 
+            <div style="align-items: center;display: flex;">
+              <span style="font-size:22px;font-weight:900;padding:3px;">⌵</span>
+            </div>
+          </a>
+          <ul class="dropdown-menu" id="dropdownMenu">
+            {% if session["logged_in"] %}
+              <li><a class="dropdown-item" href="#">Profile</a></li>
+              <li><a class="dropdown-item" href="/logout">Logout</a></li>
+            {% else %}
+              <li><a class="dropdown-item" href="/login">Login</a></li>
+            {% endif %}
+          </ul>
+        </li>
       </ul>
     </header>
 </div>
 <div style="height:110px;"></div>
+
+<!-- Flash messages for showing notifications -->
+{% with messages = get_flashed_messages(with_categories=True) %}
+    {% if messages %}
+        <div id="flash-messages">
+            {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+<!-- Flashed message code ends here -->

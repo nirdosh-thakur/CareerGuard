@@ -3,7 +3,7 @@
 This is a dynamic web application where users can browse job listings and apply online. The application is built using Replit for development, Render for deployment, Supabase as a cloud-hosted PostgreSQL database, and pgAdmin4 for local database management.
 
 🌐 Live Application URL:
-🔗 https://jovian-careers-website-v2-1rd0.onrender.com/jobs/2/apply
+🔗 Jovian Careers Website : https://jovian-careers-website-v2-1rd0.onrender.com/jobs/2/apply
 
 # Tech Stack & Tools Used
 

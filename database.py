@@ -1,11 +1,17 @@
 
 import os
+import hashlib
 from sqlalchemy import create_engine, text
+from werkzeug.security import generate_password_hash, check_password_hash
+from sqlalchemy.exc import IntegrityError
 
 DB_CONNECTION_STRING = os.environ['DB_CONNECTION_STRING']
+SESSION_SECRET_KEY = os.environ['SESSION_SECRET_KEY']
 
 engine = create_engine(DB_CONNECTION_STRING)
 
+
+##############################################################
 #Loading all Jobs
 def load_all_jobs_from_db():
   with engine.connect() as conn:
@@ -41,4 +47,73 @@ def add_application_to_db(job_id, data):
           "resume_url": data['resume_url']
       })
       conn.commit()
+
+
+
+
+
+def check_user_in_db(username, password):
+    query = text("SELECT * FROM users WHERE username = :username")
+    with engine.connect() as conn:
+        result = conn.execute(query, {"username": username})
+        row = result.fetchone()
+        if row:
+            user_data = row._asdict()
+            salt = user_data["salt"]
+            hashed_pwd = user_data["password"]  
+            if verify_password(salt, hashed_pwd, password):  
+                return ['SUCCESS', user_data]
+    return ['FAIL', {'id': 0}]
+
+
+
+
+
+
+
+#Create salt and return salt and hashed password
+def hash_password(password):
+    salt = os.urandom(16) 
+    hashed = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000)  
+    return salt.hex(), salt.hex() + ":" + hashed.hex()
+
+
+#Verfying salt and return salt and hashed password
+def verify_password(salt, stored_hashed_password, entered_password):
+    salt_hex, stored_hash_hex = stored_hashed_password.split(":")
+    salt = bytes.fromhex(salt_hex)  
+    entered_hash = hashlib.pbkdf2_hmac('sha256', entered_password.encode(), salt, 100000)
+    #print("Stored salt:", salt)
+    #print("Stored hash of pwd and salt:", stored_hashed_password)
+    #print("New generated hash:", entered_hash.hex())
+    return entered_hash.hex() == stored_hash_hex
+
+
+
+
+#Insert new user into DB
+def insert_user_in_db(first_name, last_name, username, email, gender, password):
+    query = text("INSERT INTO users (first_name, last_name, username, email, gender, password, salt) VALUES (:fn, :ln, :un, :eml, :gndr, :pwd, :salt)")
+    salt, hashed_pwd = hash_password(password)
+    try:
+        with engine.connect() as conn:
+            conn.execute(query, {
+                "fn": first_name,
+                "ln": last_name,
+                "un": username,
+                "eml": email,
+                "gndr" : gender,
+                "pwd": hashed_pwd,
+                "salt": salt
+            })
+            conn.commit()  # Commit changes
+            return {"status": "SUCCESS", "message": "User inserted successfully"}
+
+    except IntegrityError as e:
+        return {"status": e, "code": "DUPLICATE_ENTRY", "message": "Please enter correct value"}
+
+    except Exception as e:
+        return {"status": "ERROR", "code": "DB_ERROR", "message": str(e)}
+
+
 

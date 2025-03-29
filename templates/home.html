@@ -2,18 +2,30 @@
 <html>
   <head>
     <title>Jovian Page</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='flash_notf.css') }}">   
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     {% include 'bootstrap.html' %}
   </head>
 
   <body>
 
+    
+
+
+    
+    
     {% include 'nav.html' %}
     <div class="container">
+      
+
+      
       {% include 'banner.html' %}
       <h2 class="text-center mt-5 mb-4">About Jovian</h2>
       <div class="row" style="margin-bottom:16px">
         <div class="col-md-6" style="align-content:center;">
-      
+
+       {{session['first_name']}},{{session['last_name']}}, {{session['email']}}, {{session['user_id']}}, {{session['logged_in']}}   
+          
       <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
         </div>
         <div class="d-none d-md-block col-md-6">
