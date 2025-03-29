@@ -44,3 +44,9 @@
   90% { opacity: 1; }
   100% { opacity: 0; }
 }
+
+/* For diabling the <a> */
+.disabled-link {
+  pointer-events: none;  /* Prevents clicks */
+  opacity: 0.5;  /* Make it look disabled */
+  cursor: not-allowed;  /* Show disabled cursor */

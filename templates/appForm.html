@@ -1,35 +1,47 @@
+<!--
+Present in this form 
+name="full_name"
+name="email"
+name="linkedin_url" 
+name="education"
+name="work_experience"
+name="resume_url"
+-->
+
 <h4>Application Form</h4>
-<form action="/jobs/{{job['id']}}/apply" method="post">
 
-  <div class="mb-2">
-    <label>Full Name</label><br>
-    <input type="text" required name="full_name" placeholder="Bruce Wayne">
+<form action="/jobs/{{job['id']}}/apply" method="post" class="p-4 shadow-lg rounded bg-light">
+  <h2 class="mb-3 text-primary text-center">Apply for the Job</h2>
+
+  <div class="mb-3">
+    <label class="form-label fw-bold">Full Name</label>
+    <input type="text" name="full_name" placeholder="Bruce Wayne" class="form-control" value="{{ session.get('first_name', '') }} {{ session.get('last_name', '') }} " required>
   </div>
 
-  <div class="mb-2">
-    <label>Email</label><br>
-    <input type="email" required name="email" placeholder="bruce@wayne.com">
+  <div class="mb-3">
+    <label class="form-label fw-bold">Email</label>
+    <input type="email" name="email" placeholder = "bruce@wayne.com" class="form-control" value="{{ session.get('email', '') }}" required>
   </div>
 
-  <div class="mb-2">
-    <label>LinkedIn URL</label><br>
-    <input type="url" name="linkedin_url" placeholder="https://linked.com/in/brucewayne">
+  <div class="mb-3">
+    <label class="form-label fw-bold">LinkedIn URL</label>
+    <input type="url" name="linkedin_url" placeholder="https://linkedin.com/in/brucewayne" class="form-control" >
   </div>
 
-  <div class="mb-2">
-    <label>Education</label><br>
-    <textarea name="education"></textarea>
+  <div class="mb-3">
+    <label class="form-label fw-bold">Education</label>
+    <textarea name="education" class="form-control" rows="3" placeholder="Enter your education details"></textarea>
   </div>
 
-  <div class="mb-2">
-    <label>Work Experience</label><br>
-    <textarea name="work_experience"></textarea>
+  <div class="mb-3">
+    <label class="form-label fw-bold">Work Experience</label>
+    <textarea name="work_experience" class="form-control" rows="3" placeholder="Describe your work experience"></textarea>
   </div>
 
-  <div class="mb-2">
-    <label>Resume URL</label><br>
-    <input type="url" name="resume_url">
+  <div class="mb-3">
+    <label class="form-label fw-bold">Resume URL</label>
+    <input type="url" name="resume_url" class="form-control" placeholder="Paste your resume link">
   </div>
 
-  <input type="submit">
+  <button type="submit" class="btn btn-primary w-100">Submit Application</button>
 </form>

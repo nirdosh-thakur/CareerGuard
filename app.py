@@ -34,6 +34,9 @@ def single_job(id):
 
 @app.route("/jobs/<id>")
 def show_job(id):
+    if not session.get("logged_in"):  
+        flash("Login to Apply", "danger")
+        return redirect(url_for('hello_jovian'))
     JOB = load_single_job_from_db(id)
     if not JOB:
         return "Not Found", 404

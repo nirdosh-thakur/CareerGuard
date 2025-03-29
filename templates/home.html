@@ -5,6 +5,18 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='flash_notf.css') }}">   
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     {% include 'bootstrap.html' %}
+    <script>
+    function checkLogin(event) {
+        let loggedIn = {{ 'true' if session.get('logged_in') else 'false' }};
+
+        if (!loggedIn) {
+            event.preventDefault(); // Stop navigation
+            alert("Login to Apply"); // Flash message
+            return false;
+        }
+        return true;
+    }
+    </script>
   </head>
 
   <body>

@@ -1,6 +1,6 @@
-<div class="border-bottom" style = "margin-top:15px; margin-bottom:1px; padding:8px; align-content:space-between; background:#f9f9f9;">
+<div class="border-bottom" style = "margin-top:15px; display:flex; margin-bottom:1px; padding:8px; justify-content:space-between; background:#f9f9f9;">
 
-  <div style="float:left;">
+  <div>
     <h4 style="color:rgb(120,120,120); margin-bottom:3px;"> 
     {{idx['title']}}
     </h4>
@@ -13,9 +13,15 @@
     {% endif %}
   </div>
 
+
   
-  <div style="float:right;">
-    <a href="/jobs/{{idx['id']}}" type="button" class="btn btn-outline-primary float-right align-middle" style="margin-right:5px;">Apply</a>
+  <div style="display:flex; align-items:center;">
+    {% if not session.get("logged_in") %}
+    <a href="/jobs/{{idx['id']}}"  type="button" class="btn btn-outline-primary float-right align-middle disabled-link" style="margin-right:5px;">LogIn to Apply</a>
+    {% else %}
+        <a href="/jobs/{{idx['id']}}"  type="button" class="btn btn-outline-primary float-right align-middle" style="margin-right:5px;">Apply</a>
+    {% endif %}
+  
   </div>
 
 </div>
