@@ -7,7 +7,7 @@ This is a dynamic web application where users can browse job listings and apply 
 
 # Tech Stack & Tools Used
 
-1️⃣ Replit (Development)
+1️⃣ Replit (Development) - Flask / Python
 1. An online coding environment for writing and testing Python code.
 2. Free to use with instant cloud-based access.
 3. Allows collaboration and quick iteration.
