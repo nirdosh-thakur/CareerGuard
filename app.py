@@ -1,6 +1,5 @@
 from flask import Flask, render_template, jsonify, request, url_for, redirect, session, flash
-from database import load_all_jobs_from_db, load_single_job_from_db, add_application_to_db,check_user_in_db, SESSION_SECRET_KEY, insert_user_in_db
-
+from database import load_all_jobs_from_db, load_single_job_from_db, add_application_to_db,check_user_in_db, SESSION_SECRET_KEY, insert_user_in_db,send_community_message,receive_community_message
 
 app = Flask(__name__)
 app.secret_key = SESSION_SECRET_KEY
@@ -130,8 +129,50 @@ def create_new_user():
     else:
         flash("Username already exists!", "danger")
         return redirect(url_for('signup'))
-        
+
+
+#Community Page
+@app.route("/community")
+def community():
+    return render_template('community_msges.html')
+
+
+
+
+@app.route('/community/send_message', methods=['POST'])
+def send_message():
+    #if 'first_name' not in session or 'user_id' not in session:
+    #    return jsonify({'error': 'Unauthorized'}), 401
+
+    username = session.get('first_name')
+    message = request.form['cmnty_message']
+
+    # Store message in DB
+    send_community_message(username, session['user_id'], message)
+
+    return jsonify({'status': 'Message sent'}), 200
+
+@app.route('/community/send_message/api', methods=['POST'])
+def send_api_message():
+    username = session.get('first_name')
+    message = request.form['message']
+    send_community_message(username, session['user_id'], message)
+    return jsonify({'status': 'Message sent'}), 200
+
+
+@app.route('/get_messages', methods=['GET'])
+def get_messages():
+    messages = receive_community_message()
+    return jsonify({'messages': messages})
+
+
+
+
+
+
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True, port=8080)
+    #SocketIO.run(app, debug=True)
 
 #Cloud Web Serivces - AWS, Azure, GCP, Render.com(good for Python)

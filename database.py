@@ -5,6 +5,7 @@ from sqlalchemy import create_engine, text
 from werkzeug.security import generate_password_hash, check_password_hash
 from sqlalchemy.exc import IntegrityError
 
+
 DB_CONNECTION_STRING = os.environ['DB_CONNECTION_STRING']
 SESSION_SECRET_KEY = os.environ['SESSION_SECRET_KEY']
 
@@ -117,3 +118,16 @@ def insert_user_in_db(first_name, last_name, username, email, gender, password):
 
 
 
+def send_community_message(username, userid, message):
+    query = text("INSERT INTO community_messages (userid, username, message) VALUES (:userid, :username, :message)")
+    with engine.connect() as conn:
+        conn.execute(query, {"userid": userid, "username": username, "message": message})  
+        conn.commit()
+        return True
+
+def receive_community_message():
+    query = text("SELECT userid, username, message FROM community_messages ORDER BY timestamp ASC")
+    with engine.connect() as conn:
+        result = conn.execute(query)
+        messages = [{'userid': row[0],'username': row[1], 'message': row[2]} for row in result.fetchall()] 
+        return messages
