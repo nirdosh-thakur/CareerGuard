@@ -63,8 +63,15 @@ def login():
 
 @app.route("/logout")
 def logout():
-    session.clear()  # Clears all session data
-    return redirect(url_for("login"))  # Redirects to login page
+     # Clear the session data
+    session.clear()
+    
+    # Expire the session cookie by setting its expiry to a past time
+    response = make_response(redirect(url_for("login")))  # Redirect to the login page
+    response.set_cookie('sessionid', '', expires=datetime.now() - timedelta(days=1))  # Expire the session cookie
+    
+    flash("You have been logged out successfully!", "success")
+    return response
 
 # Login check user authentication
 @app.route("/login/check", methods=['post'])
