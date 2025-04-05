@@ -103,10 +103,6 @@ def login_api():
 def callback():
     code = request.args.get('code')
     code_verifier = session.get('code_verifier')
-    #print("Coode :",code)
-    #print("Code Verifier :",code_verifier)
-
-    #print("Sendign Authrization Code to get access token :")
     
     # 🎟 Exchange Authorization Code for Access Token
     token_response = requests.post(
