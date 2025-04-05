@@ -98,20 +98,7 @@ input{
 ::placeholder{
     color: #e5e5e5;
 }
-#login_button{
-  color: black;
-  display: flex;
-  height: 44px;
-  width: 100%;
-  background-color: white;
-  border-radius: 6px;
-  margin-top: 25px;
-  font-size: 18px;
-  font-weight: 700;
-  justify-content: center;
-  cursor: pointer;
-  padding: 11px 0;
-}
+
 .social{
   margin-top: 12px;
   display: flex;
@@ -164,17 +151,23 @@ input{
         <label for="password">Password</label>
         <input type="password" required placeholder="Password" id="password"  name="password">
 
-      <div>
-        <button type="submit" id="login_button" href="/" type="button" >Log In</button>
-      </div>
-      <a  id="login_button" href="/login/google_api" type="button" >Log In with Google</a>
-
-      <div style="display: flex;justify-content: center;margin-top: 10px;"><a href="/signup" style="color: #c7c7c7;font-family: serif;"> Sign Up</a></div>
-      
-        <div class="social">
-          <div class="go"><i class="fab fa-google"></i>  Google</div>
-          <div class="fb"><i class="fab fa-facebook"></i>  Facebook</div>
+      <div style="display: flex;margin-top: 3rem;">
+           <button type="submit" id="login_button" href="/" style="width: -webkit-fill-available;font-size:large;font-weight:900;color:black;">Log In</button>
+          <a id="login_goggle_button" href="/login/google_api" style="width: min-content;padding: 11px;background:#a8aaac;"><i class="fab fa-google" style="color: black;border: 2px solid;padding: 4px;border-radius: 50%;"></i>
+    </a>
         </div>
+      
+      <div style="display: flex;justify-content: center;margin-top: 10px;"><a href="/signup" style="color: #c7c7c7;font-family: serif;"> Sign Up</a></div>
+      <!--
+        <div class="social">
+            <a href="/login/google_api">
+                
+          <button class="go" id ="login_goggle_button" type="button" style=""><i class="fab fa-google"></i> Google</button></a>
+          
+            <div class="fb"><i class="fab fa-facebook"></i>  Facebook</div> 
+            
+        </div>
+      -->
     </form>
 </body>
 </html>
