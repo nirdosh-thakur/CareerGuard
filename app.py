@@ -1,9 +1,29 @@
 from flask import Flask, render_template, jsonify, request, url_for, redirect, session, flash
+import os
+import base64
+import hashlib
+import requests
 from database import load_all_jobs_from_db, load_single_job_from_db, add_application_to_db,check_user_in_db, SESSION_SECRET_KEY, insert_user_in_db,send_community_message,receive_community_message
 
 app = Flask(__name__)
 app.secret_key = SESSION_SECRET_KEY
 
+# 🔹 Google OAuth 2.0 Configuration
+GOOGLE_CLIENT_ID = os.environ['GOOGLE_CLIENT_ID']
+GOOGLE_CLIENT_SECRET = os.environ['GOOGLE_CLIENT_SECRET']  # Optional if using PKCE
+GOOGLE_AUTHORIZATION_ENDPOINT = 'https://accounts.google.com/o/oauth2/auth'
+GOOGLE_TOKEN_ENDPOINT = 'https://oauth2.googleapis.com/token'
+GOOGLE_USER_INFO_ENDPOINT = 'https://www.googleapis.com/oauth2/v2/userinfo'
+GOOGLE_REDIRECT_URI = 'https://c17a44de-e80b-456e-8a4e-00daed9d4b9e-00-2qnm02374084h.sisko.replit.dev/login/callback'
+
+
+# ✅ Generate PKCE Code Verifier & Challenge
+def generate_code_verifier():
+    return base64.urlsafe_b64encode(os.urandom(40)).decode('utf-8').rstrip('=')
+
+def generate_code_challenge(verifier):
+    digest = hashlib.sha256(verifier.encode('utf-8')).digest()
+    return base64.urlsafe_b64encode(digest).decode('utf-8').rstrip('=')
 
 @app.route("/")
 def hello_jovian():
@@ -60,6 +80,76 @@ def login():
     return render_template('login.html',
                            #jobs=JOBS,
                            company_name='Jovian Careers')
+@app.route("/login/google_api")
+def login_api():
+    code_verifier = generate_code_verifier()
+    session['code_verifier'] = code_verifier
+    code_challenge = generate_code_challenge(code_verifier)
+
+    auth_url = (
+        f"{GOOGLE_AUTHORIZATION_ENDPOINT}?"
+        f"response_type=code&"
+        f"client_id={GOOGLE_CLIENT_ID}&"
+        f"redirect_uri={GOOGLE_REDIRECT_URI}&"
+        f"scope=openid%20email%20profile&"
+        f"code_challenge={code_challenge}&"
+        f"code_challenge_method=S256&"
+        f"access_type=offline"  # Allows refresh tokens
+    )
+    #return jsonify({0:auth_url})
+    return redirect(auth_url)
+
+@app.route('/login/callback')
+def callback():
+    code = request.args.get('code')
+    code_verifier = session.get('code_verifier')
+    #print("Coode :",code)
+    #print("Code Verifier :",code_verifier)
+
+    #print("Sendign Authrization Code to get access token :")
+    
+    # 🎟 Exchange Authorization Code for Access Token
+    token_response = requests.post(
+        GOOGLE_TOKEN_ENDPOINT,
+        headers={'Content-Type': 'application/x-www-form-urlencoded'},
+        data={
+            'grant_type': 'authorization_code',
+            'code': code,
+            'redirect_uri': GOOGLE_REDIRECT_URI,
+            'client_id': GOOGLE_CLIENT_ID,
+            'client_secret': GOOGLE_CLIENT_SECRET,  # Optional if using PKCE
+            'code_verifier': code_verifier
+        }
+    )
+
+    token_data = token_response.json()
+    access_token= token_data.get('access_token')
+
+    if not access_token:
+        return jsonify({"error": "Failed to get access token", "details": token_data}), 400
+        
+    session['access_token'] = access_token # Store access token
+    #return jsonify(token_data)
+    #return redirect(url_for('hello_jovian'))  # Redirect to profile 
+    
+    # 📥 Fetch user profile from Google
+    user_info = requests.get(
+        GOOGLE_USER_INFO_ENDPOINT,
+        headers={'Authorization': f'Bearer {access_token}'}
+    ).json()
+
+    # 💾 Store in session
+    session['logged_in'] = True
+    session['first_name'] = user_info.get("given_name")
+    session['last_name'] = user_info.get("family_name")
+    session['email'] = user_info.get("email")
+    session['user_id'] = user_info.get("id")
+    session['login_via']= 'GOOGLE'
+
+    flash("Logged in with Google!", "success")
+    return redirect(url_for('hello_jovian'))
+
+
 
 @app.route("/logout")
 def logout():
@@ -81,6 +171,7 @@ def logged_user():
         session['first_name'] = result_dict[1]['first_name']
         session['last_name'] = result_dict[1]['last_name']
         session['email'] = result_dict[1]['email']
+        session['login_via']= 'DB'
         return redirect(url_for('hello_jovian'))
     else:
         flash("Invalid Username/password!", "danger")

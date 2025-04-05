@@ -124,7 +124,10 @@
         <li class="nav-item"><a href="/" class="nav-link active">Home</a></li>
         <li class="nav-item"><a href="#" class="nav-link">Projects</a></li>
         <li class="nav-item"><a href="#" class="nav-link">Skills</a></li>
+        {% if session["login_via"] == 'DB'%}
         <li class="nav-item"><a href="/community" class="nav-link">Community</a></li>
+        {% endif %}
+        
         <!--  Adding drowpadown for Login logout -->
         <li class="nav-item dropdown" style="align-items: center;justify-content: space-evenly;">
           <a href="#" class="nav-link" id="dropdownBtn" style="display: flex;">             <div style="align-items:center;display:flex;">
