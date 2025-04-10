@@ -122,7 +122,6 @@ def send_community_message(userid, userfname, message):
     print("Send communtiy message function started")
     try:
         query = text("INSERT INTO community_messages (userid, username, message) VALUES (:userid, :username, :message)")
-        #query = text("INSERT INTO community_messages (userid, username, message) VALUES ('1234567891', 'test', 'test')")
         with engine.connect() as conn:
             print("Database connection successful.")
             print(userid)
