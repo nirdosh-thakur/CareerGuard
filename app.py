@@ -11,7 +11,8 @@ from database import load_all_jobs_from_db, load_single_job_from_db, add_applica
 app = Flask(__name__)
 app.secret_key = SESSION_SECRET_KEY
 
-socketio = SocketIO(app, async_mode='eventlet')
+#socketio = SocketIO(app, async_mode='eventlet')
+socketio = SocketIO(app, async_mode='eventlet', cors_allowed_origins="*")  # Allow all origins
 
 # 🔹 Google OAuth 2.0 Configuration
 GOOGLE_CLIENT_ID = os.environ['GOOGLE_CLIENT_ID']

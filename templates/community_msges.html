@@ -55,9 +55,7 @@
         });
         */
 
-        const socket = io("https://careerguard.onrender.com", {
-          transports: ['websocket']
-        });
+        const socket = io();
         const userfname = "{{ session['first_name'] }}";
 
         socket.on('message', function(data) {
