@@ -4,6 +4,7 @@ import os
 import base64
 import hashlib
 import requests
+import json
 from datetime import datetime
 from database import load_all_jobs_from_db, load_single_job_from_db, add_application_to_db,check_user_in_db, SESSION_SECRET_KEY, insert_user_in_db,send_community_message,receive_community_message
 
@@ -257,15 +258,22 @@ def get_messages():
     return jsonify({'messages': messages})
 
 @socketio.on('message')
-def handle_message(msg):
-    print(f"Message: {msg}")
-    send(msg, broadcast=True)
+def handle_message(data):
+    userId = session.get('user_id')
+    userfname = session.get('first_name')
+    message = data.get('message')
+    if send_community_message(userId, userfname, message):
+        send(data, broadcast=True)
+    else:
+        #print("Database returnign False")
+        data = {'message':message, 'retStatus': 'fail'}
+        send(json.dumps(data), broadcast=False)
 
 
 
 if __name__ == "__main__":
     #app.run(host="0.0.0.0", debug=True, port=8080)
-    socketio.run(app, host='0.0.0.0', debug=True, port=port)
+    socketio.run(app, host='0.0.0.0', port=8080, debug=True, use_reloader=False, log_output=True)
     #SocketIO.run(app, debug=True)
 
 #Cloud Web Serivces - AWS, Azure, GCP, Render.com(good for Python)

@@ -3,7 +3,7 @@ import os
 import hashlib
 from sqlalchemy import create_engine, text
 from werkzeug.security import generate_password_hash, check_password_hash
-from sqlalchemy.exc import IntegrityError
+from sqlalchemy.exc import IntegrityError, SQLAlchemyError
 
 
 DB_CONNECTION_STRING = os.environ['DB_CONNECTION_STRING']
@@ -118,12 +118,25 @@ def insert_user_in_db(first_name, last_name, username, email, gender, password):
 
 
 
-def send_community_message(username, userid, message):
-    query = text("INSERT INTO community_messages (userid, username, message) VALUES (:userid, :username, :message)")
-    with engine.connect() as conn:
-        conn.execute(query, {"userid": userid, "username": username, "message": message})  
-        conn.commit()
-        return True
+def send_community_message(userid, userfname, message):
+    print("Send communtiy message function started")
+    try:
+        query = text("INSERT INTO community_messages (userid, username, message) VALUES (:userid, :username, :message)")
+        #query = text("INSERT INTO community_messages (userid, username, message) VALUES ('1234567891', 'test', 'test')")
+        with engine.connect() as conn:
+            print("Database connection successful.")
+            print(userid)
+            print(userfname)
+            print(message)
+            conn.execute(query, {"userid": userid,
+                                 "username": userfname,
+                                 "message": message}) 
+            #conn.execute(query)
+            print("Query executed successfully.")
+            conn.commit()
+            return True
+    except SQLAlchemyError:
+        return False
 
 def receive_community_message():
     query = text("SELECT userid, username, message FROM community_messages ORDER BY timestamp ASC")
