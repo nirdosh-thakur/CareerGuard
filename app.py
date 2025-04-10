@@ -1,12 +1,16 @@
 from flask import Flask, render_template, jsonify, request, url_for, redirect, session, flash
+from flask_socketio import SocketIO, send, emit
 import os
 import base64
 import hashlib
 import requests
+from datetime import datetime
 from database import load_all_jobs_from_db, load_single_job_from_db, add_application_to_db,check_user_in_db, SESSION_SECRET_KEY, insert_user_in_db,send_community_message,receive_community_message
 
 app = Flask(__name__)
 app.secret_key = SESSION_SECRET_KEY
+
+socketio = SocketIO(app, async_mode='eventlet')
 
 # 🔹 Google OAuth 2.0 Configuration
 GOOGLE_CLIENT_ID = os.environ['GOOGLE_CLIENT_ID']
@@ -252,14 +256,16 @@ def get_messages():
     messages = receive_community_message()
     return jsonify({'messages': messages})
 
-
-
-
+@socketio.on('message')
+def handle_message(msg):
+    print(f"Message: {msg}")
+    send(msg, broadcast=True)
 
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True, port=8080)
+    #app.run(host="0.0.0.0", debug=True, port=8080)
+    socketio.run(app, host='0.0.0.0', debug=True, port=port)
     #SocketIO.run(app, debug=True)
 
 #Cloud Web Serivces - AWS, Azure, GCP, Render.com(good for Python)
