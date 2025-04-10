@@ -130,11 +130,11 @@ def send_community_message(userid, userfname, message):
             conn.execute(query, {"userid": userid,
                                  "username": userfname,
                                  "message": message}) 
-            #conn.execute(query)
             print("Query executed successfully.")
             conn.commit()
             return True
     except SQLAlchemyError:
+        print("Query failed.")
         return False
 
 def receive_community_message():

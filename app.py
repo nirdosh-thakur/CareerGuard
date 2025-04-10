@@ -263,9 +263,10 @@ def handle_message(data):
     userfname = session.get('first_name')
     message = data.get('message')
     if send_community_message(userId, userfname, message):
+        print("Database returnign True")
         send(data, broadcast=True)
     else:
-        #print("Database returnign False")
+        print("Database returnign False")
         data = {'message':message, 'retStatus': 'fail'}
         send(json.dumps(data), broadcast=False)
 
