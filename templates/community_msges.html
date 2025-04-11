@@ -57,31 +57,87 @@
 
         const socket = io();
         const userfname = "{{ session['first_name'] }}";
+        const userId = Number("{{ session['user_id'] }}");
 
-        socket.on('message', function(data) {
-            const chat = document.getElementById('chat');
-            if(data.retStatus == "success"){
-                console.log(data.message);
+        function renderMessage(data, isHistory = false) {
+            const chatBox = document.getElementById('chat-box');
+            const isMyMessage = Number(data.userId) === userId;
+            const rowDiv = document.createElement("div");
+            rowDiv.classList.add("message-row", isMyMessage ? "right" : "left");
+
+            const bubble = document.createElement("div");
+            bubble.classList.add("message-bubble");
+
+            if (!isMyMessage) {
+                const senderName = document.createElement("div");
+                senderName.style.fontWeight = "bold";
+                senderName.style.marginBottom = "2px";
+                senderName.style.color = "#075E54";
+                senderName.textContent = data.userfname;
+                bubble.appendChild(senderName);
             }
-            else{
-                console.log("error");
+
+            const messageText = document.createElement("span");
+            messageText.classList.add("message-text");
+            messageText.textContent = data.message;
+
+            const messageTime = document.createElement("span");
+            messageTime.classList.add("message-time");
+
+            if (data.timestamp) {
+                messageTime.textContent = new Date(data.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            } else {
+                const timeNow = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                messageTime.textContent = timeNow;
             }
-          //const p = document.createElement('p');
-          //p.textContent = msg;
-          //chat.appendChild(p);
+
+            bubble.appendChild(messageText);
+            bubble.appendChild(messageTime);
+            rowDiv.appendChild(bubble);
+            chatBox.appendChild(rowDiv);
+
+            if (!isHistory) {
+                chatBox.scrollTop = chatBox.scrollHeight;
+            }
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            fetch("/community/get_all_messages")
+                .then(res => res.json())
+                .then(messages => {
+                    console.log('hello i am here');
+                    messages.forEach(msg => {
+                        renderMessage(msg, true);
+                    });
+                    const chatBox = document.getElementById('chat-box');
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                });
         });
 
         function sendMessage() {
             const input = document.getElementById('message-input');
+            const messageText = input.value.trim();
+
+            if (messageText === "") return;  // prevent sending empty message
+
             const messageData = {
-              message: input.value,
-              retStatus: "success"
+                userId: {{ session['user_id'] }},
+                userfname: "{{ session['first_name'] }}",
+                message: messageText,
+                retStatus: "success"
             };
-            socket.send(messageData);
-            console.log("Message sent");
-            input.value = '';
+
+            socket.send(messageData);  // send to socket server
+            input.value = '';  // clear input
         }
-        console.log("hello");
+        
+        socket.on('message', function(data) {
+            if (data.retStatus === "success") {
+                renderMessage(data);
+            } else {
+                console.log("Message error");
+            }
+        });
         
     </script>
     <style>
@@ -94,7 +150,10 @@
             padding: 10px;
             border: 1px solid #ddd;
             border-radius: 8px;
-            background: white;
+            background: #e5ddd5;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5em;
         }
         .chat-message {
             padding: 8px 12px;
@@ -110,6 +169,51 @@
             background-color: #e9ecef;
             color: black;
             text-align: left;
+        }
+
+        .message-row {
+            display: flex;
+            max-width: 75%;
+        }
+
+        .message-row.left {
+            justify-content: flex-start;
+        }
+
+        .message-row.right {
+            justify-content: flex-end;
+            align-self: flex-end;
+        }
+
+        .message-bubble {
+            background-color: #dcf8c6;
+            padding: 0.5em 0.8em;
+            border-radius: 10px;
+            position: relative;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        .message-row.left .message-bubble {
+            background-color: white;
+            border-top-left-radius: 0;
+        }
+
+        .message-row.right .message-bubble {
+            background-color: #dcf8c6;
+            border-top-right-radius: 0;
+        }
+
+        .message-text {
+            display: block;
+            font-size: 0.95em;
+            margin-bottom: 0.3em;
+        }
+
+        .message-time {
+            font-size: 0.75em;
+            color: #888;
+            text-align: right;
+            display: block;
         }
     </style>
 </head>

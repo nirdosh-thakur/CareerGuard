@@ -6,7 +6,7 @@ import hashlib
 import requests
 import json
 from datetime import datetime
-from database import load_all_jobs_from_db, load_single_job_from_db, add_application_to_db,check_user_in_db, SESSION_SECRET_KEY, insert_user_in_db,send_community_message,receive_community_message
+from database import load_all_jobs_from_db, load_single_job_from_db, add_application_to_db,check_user_in_db, SESSION_SECRET_KEY, insert_user_in_db,send_community_message, fetch_all_community_message, g_fetch_all_community_message
 
 app = Flask(__name__)
 app.secret_key = SESSION_SECRET_KEY
@@ -109,7 +109,7 @@ def login_api():
 def callback():
     code = request.args.get('code')
     code_verifier = session.get('code_verifier')
-    
+
     # 🎟 Exchange Authorization Code for Access Token
     token_response = requests.post(
         GOOGLE_TOKEN_ENDPOINT,
@@ -129,11 +129,11 @@ def callback():
 
     if not access_token:
         return jsonify({"error": "Failed to get access token", "details": token_data}), 400
-        
+
     session['access_token'] = access_token # Store access token
     #return jsonify(token_data)
     #return redirect(url_for('hello_jovian'))  # Redirect to profile 
-    
+
     # 📥 Fetch user profile from Google
     user_info = requests.get(
         GOOGLE_USER_INFO_ENDPOINT,
@@ -163,7 +163,7 @@ def logout():
 def logged_user():
     username = request.form['username']
     password = request.form['password']
-    
+
     # Check if user exists in DB
     result_dict = check_user_in_db(username, password)
     if(result_dict[0]=='SUCCESS'):
@@ -207,9 +207,9 @@ def create_new_user():
     if(password != re_password):
         flash("Password didn't match", "danger")
         return redirect(url_for('signup'))
-        
+
     result_dict = check_user_in_db(username, password)
-    
+
     if( result_dict[0] == "FAIL" ):
         #return jsonify(result_dict[1])
         query_status = insert_user_in_db(first_name, last_name, username, email, gender, password)
@@ -253,21 +253,30 @@ def send_api_message():
     return jsonify({'status': 'Message sent'}), 200
 
 
-@app.route('/get_messages', methods=['GET'])
+@app.route('/community/get_all_messages')
 def get_messages():
-    messages = receive_community_message()
-    return jsonify({'messages': messages})
+    print("Fetching all messages")
+    result_val = fetch_all_community_message()
+    if(result_val[0] == 'Success'):
+        print("Messages fetched successfully")
+        return jsonify(result_val[1])
+    else:
+        print("Failed to fetch messages")
+        return jsonify({'error': 'Failed to fetch messages'}), 500
 
 @socketio.on('message')
 def handle_message(data):
-    userId = session.get('user_id')
-    userfname = session.get('first_name')
+    #userId = session.get('user_id')
+    #userfname = session.get('first_name')
     message = data.get('message')
+    userId = data.get('userId')
+    userfname = data.get('userfname')
     if send_community_message(userId, userfname, message):
-        print("Database returnign True")
+        #print("Database returnign True")
+        #data = {'message':message, 'userId':userId, 'userfname':userfname, 'retStatus': 'success'}
         send(data, broadcast=True)
     else:
-        print("Database returnign False")
+        #print("Database returnign False")
         data = {'message':message, 'retStatus': 'fail'}
         send(json.dumps(data), broadcast=False)
 

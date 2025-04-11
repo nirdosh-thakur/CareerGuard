@@ -137,9 +137,17 @@ def send_community_message(userid, userfname, message):
         print("Query failed.")
         return False
 
-def receive_community_message():
-    query = text("SELECT userid, username, message FROM community_messages ORDER BY timestamp ASC")
-    with engine.connect() as conn:
-        result = conn.execute(query)
-        messages = [{'userid': row[0],'username': row[1], 'message': row[2]} for row in result.fetchall()] 
-        return messages
+def g_fetch_all_community_message():
+    return ['Fail']
+
+def fetch_all_community_message():
+    try:
+        query = text("SELECT userid, username, message, timestamp FROM community_messages ORDER BY timestamp ASC")
+        with engine.connect() as conn:
+            result = conn.execute(query)
+            print("Query executed successfully.Db")
+            messages = [{'userId': row[0],'userfname': row[1], 'message': row[2], 'timestamp': row[3]} for row in result.fetchall()] 
+            return ['Success', messages]
+    except SQLAlchemyError:
+        print("Query failed.")
+        return ['Fail']
